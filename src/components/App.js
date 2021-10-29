@@ -70,6 +70,20 @@ createTask=async (value)=>{
         // this.props.tasks=[...this.props.tasks,task_n]
   }
   
+  markTodo=async (idx)=>{
+  // this.componentWillMount() 
+  console.log(idx)
+    let abc = await this.state.token.methods.makeComplete(idx).send({ from: this.state.account });
+       // let tokenCount = await this.state.token.methods.taskCount().call();
+      // console.log(tokenCount+" ll");
+      const task_n = await this.state.token.methods.tasks(idx).call();
+      let tasks_1 = this.state.tasks
+      tasks_1[idx-1] = task_n
+      console.log(task_n.completed)
+      this.setState({tasks:tasks_1});
+
+        // this.props.tasks=[...this.props.tasks,task_n]
+  }
   constructor(props) {
     super(props)
     this.state = {
@@ -102,9 +116,9 @@ createTask=async (value)=>{
               <Card.Body>
                 <Todo
                 key={index}
-                index={index}
+                index={index+1}
                 todo={todo}
-                // markTodo={markTodo}
+                markTodo={this.markTodo}
                 // removeTodo={removeTodo}
                 />
               </Card.Body>
