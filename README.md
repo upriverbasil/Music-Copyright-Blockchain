@@ -2,3 +2,4 @@
 
 TO DO:
 - ~~Develop a login page selection for musician and user.~~
+Study Promise - Javascript
