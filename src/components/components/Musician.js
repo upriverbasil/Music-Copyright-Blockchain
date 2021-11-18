@@ -7,6 +7,8 @@ const defaultValues = {
   album:"",
   publishingyear:"",
   artist:"",
+  wallet:"",
+  payment:"",
   fileupload:null
 };
 const User = () => {
@@ -65,9 +67,31 @@ const User = () => {
           	required={true}
             id="artist-input"
             name="artist"
-            label="Artist/Song Writer/Composition Owner"
+            label="Artist/Song Writer"
             type="text"
             value={formValues.artist}
+            onChange={handleInputChange}
+          />
+        </Grid>
+        <Grid item xs={1}>
+          <TextField
+          	required={true}
+            id="wallet-address"
+            name="wallet"
+            label="Wallet Address"
+            type="text"
+            value={formValues.wallet}
+            onChange={handleInputChange}
+          />
+        </Grid>
+        <Grid item xs={1}>
+          <TextField
+          	required={true}
+            id="payment"
+            name="payment"
+            label="Payment"
+            type="text"
+            value={formValues.payment}
             onChange={handleInputChange}
           />
         </Grid>
