@@ -12,7 +12,7 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import User from './User';
-import Musician from './Musician';
+// import Musician from './Musician';
 import MusicianLogin from './MusicianLogin';
 function Copyright() {
   return (
