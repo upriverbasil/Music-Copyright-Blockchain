@@ -12,7 +12,8 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import User from './User';
-import Musician from './Musician';
+// import Musician from './Musician';
+import MusicianLogin from './MusicianLogin';
 function Copyright() {
   return (
     <Typography variant="body2" color="text.secondary" align="center">
@@ -96,7 +97,7 @@ export default function Album() {
     
     }
     {
-    option===1 && <Musician/>}
+    option===1 && <MusicianLogin/>}
     {
     option===2 && <User/>}
     </ThemeProvider>
