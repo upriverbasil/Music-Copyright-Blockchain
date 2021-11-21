@@ -4,6 +4,10 @@ import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Musician from './Musician';
 import Button from "@mui/material/Button";
+
+
+
+
 var forge = require('node-forge');
 var BigInteger = forge.jsbn.BigInteger;
 var THIRTY = new BigInteger(null);
@@ -59,8 +63,28 @@ function findPrime(num, callback) {
 }
 const defaultValues = {
     publicValue:"",
+    Title:"",
+    AlbumName:"",
+    publishingYear:0,
+    artist1_address:"",
+    artist1_payment:0,
+    ipfs_hash:""
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
 const User = () => {
+    
     const [formValues, setFormValues] = useState(defaultValues);
     const [option,setOption] = useState(0)
     const handleInputChange = (e) => {
@@ -112,12 +136,13 @@ const User = () => {
                 <p> Create New Public Key</p>
             </div>    
         </Grid>
+        
         <Button variant="contained" color="primary" type="generate" onClick={handleGenerate}>
           Generate
         </Button>
       </Grid>
       {
-        option===1 && <Musician/>}
+        option===1 && <Musician value = {formValues["publicValue"]}/>}
     </form>
     
 
