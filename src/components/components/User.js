@@ -21,6 +21,7 @@ const User = () => {
       await loadBlockchainData()
     })()
   }, []);
+  const [yo,setYo] = useState()
 const [num_musician,setNumMusician] = useState()
   const [Account,SetAccount] = useState()
   async function loadBlockchainData() {
@@ -28,6 +29,7 @@ const [num_musician,setNumMusician] = useState()
 
     const accounts = await web3.eth.getAccounts()
     // this.setState({ account: accounts[0] })
+    setYo({web3, accounts});
     SetAccount(accounts[0])
     const networkId = await web3.eth.net.getId()
     const daiTokenData = Musicians.networks[networkId]
@@ -36,6 +38,7 @@ const [num_musician,setNumMusician] = useState()
       const daiToken = new web3.eth.Contract(Musicians.abi, daiTokenData.address)
       console.log(daiToken)
       setToken(daiToken)
+      console.log(daiToken,"ll")
       let num_musician = await daiToken.methods.num_musicians().call()
       setNumMusician(num_musician)
       // this.setState({ daiToken })
@@ -45,40 +48,7 @@ const [num_musician,setNumMusician] = useState()
       window.alert('DaiToken contract not deployed to detected network.')
     }
 
-    // Load DaiToken
-    // const daiTokenData = DaiToken.networks[networkId]
-    // if(daiTokenData) {
-    //   const daiToken = new web3.eth.Contract(DaiToken.abi, daiTokenData.address)
-    //   this.setState({ daiToken })
-    //   let daiTokenBalance = await daiToken.methods.balanceOf(this.state.account).call()
-    //   this.setState({ daiTokenBalance: daiTokenBalance.toString() })
-    // } else {
-    //   window.alert('DaiToken contract not deployed to detected network.')
-    // }
-
-    // // Load DappToken
-    // const dappTokenData = DappToken.networks[networkId]
-    // if(dappTokenData) {
-    //   const dappToken = new web3.eth.Contract(DappToken.abi, dappTokenData.address)
-    //   this.setState({ dappToken })
-    //   let dappTokenBalance = await dappToken.methods.balanceOf(this.state.account).call()
-    //   this.setState({ dappTokenBalance: dappTokenBalance.toString() })
-    // } else {
-    //   window.alert('DappToken contract not deployed to detected network.')
-    // }
-
-    // // Load TokenFarm
-    // const tokenFarmData = TokenFarm.networks[networkId]
-    // if(tokenFarmData) {
-    //   const tokenFarm = new web3.eth.Contract(TokenFarm.abi, tokenFarmData.address)
-    //   this.setState({ tokenFarm })
-    //   let stakingBalance = await tokenFarm.methods.stakingBalance(this.state.account).call()
-    //   this.setState({ stakingBalance: stakingBalance.toString() })
-    // } else {
-    //   window.alert('TokenFarm contract not deployed to detected network.')
-    // }
-
-    // this.setState({ loading: false })
+  
   }
 
   async function loadWeb3() {
@@ -105,15 +75,28 @@ const [num_musician,setNumMusician] = useState()
       [name]: value,
     });
   };
-  const handleSubmit = async(event) => {
-    console.log(num_musician)
-    event.preventDefault();
-    console.log(formValues,"ppp");
-    await token.methods.getAlbum(formValues.pubaddr,formValues.ipfsHash).call()
+  const handleSubmit = (event) => {
     
+   console.log(formValues.pubaddr,formValues.ipfs)
+   token.methods.musician(formValues.pubaddr,formValues.ipfs).call({from:Account}).then((result) => {
+      
+        console.log(result);
+        const web3 = window.web3
+        console.log(result[3],result[4])
+        web3.eth.sendTransaction({to:result[3], from:Account, value:web3.utils.toWei(result[4], "ether")})
+        // console.log(result.dna);
+      
+    }); 
+   token.methods.all_ipfs_hash(0).call({from:Account}).then((result) => {
+      
+        console.log(result);
+        // console.log(result.dna);
+      
+    }); 
+
   };
   return (
-    <form onSubmit={handleSubmit}>
+    
       <Grid container alignItems="center" justify="center" direction="column" spacing={2}>
         <Grid item xs={1}>
           <TextField
@@ -137,22 +120,12 @@ const [num_musician,setNumMusician] = useState()
             onChange={handleInputChange}
           />
         </Grid>
-         <Grid item xs={1}>
-          <TextField
-          	required={true}
-            id="payment-input"
-            name="payment"
-            label="Payment Amount"
-            type="text"
-            value={formValues.payment}
-            onChange={handleInputChange}
-          />
-        </Grid>
-        <Button variant="contained" color="primary" type="submit" >
+
+        <Button onClick={handleSubmit} variant="contained" color="primary" type="submit" >
           Submit
         </Button>
       </Grid>
-    </form>
+    
   );
 };
 export default User;

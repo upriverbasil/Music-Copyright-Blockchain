@@ -124,7 +124,7 @@ const User = (props) => {
     console.log(formValues);
     var list1 = [formValues.wallet]
     var list2 = [formValues.payment]
-    await token.methods.addAlbum(props.value,formValues.ipfsHash,formValues.title,formValues.album,formValues.publishingyear,list1, list2).send({from:Account})
+    await token.methods.addAlbum(props.value,formValues.ipfsHash,formValues.title,formValues.album,formValues.publishingyear,formValues.wallet, formValues.payment).send({from:Account})
     setAlbumPub(true)
   };
   const onChange = async(e)=> {
@@ -137,7 +137,7 @@ const User = (props) => {
           ...formValues,
           "ipfsHash": x,
         });
-        console.log(x,"iii")
+        alert("IPFS HASH:"+x);
         });
         // console.log(formValues,added.path,fileUrl)
       } catch (error) {
