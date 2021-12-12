@@ -4,6 +4,10 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Web3 from 'web3'
 import Musicians from '../../abis/Musicians.json'
+import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import AudioPlayer from 'material-ui-audio-player';
+
+const muiTheme = createMuiTheme({});
 const defaultValues = {
   pubaddr:"",
   ipfs:"",
@@ -12,7 +16,8 @@ const defaultValues = {
 };
 const User = () => {
 
-
+  const [paymentDone,setPaymentDone] = useState(false);
+  const [ipfsHash,setIpfsHash] = useState("");
   const[token,setToken] = useState()
 
   useEffect(() => {
@@ -28,22 +33,20 @@ const [num_musician,setNumMusician] = useState()
     const web3 = window.web3
 
     const accounts = await web3.eth.getAccounts()
-    // this.setState({ account: accounts[0] })
+    
     setYo({web3, accounts});
     SetAccount(accounts[0])
     const networkId = await web3.eth.net.getId()
     const daiTokenData = Musicians.networks[networkId]
-    console.log(daiTokenData)
+    
     if(daiTokenData) {
       const daiToken = new web3.eth.Contract(Musicians.abi, daiTokenData.address)
-      console.log(daiToken)
+      
       setToken(daiToken)
-      console.log(daiToken,"ll")
+ 
       let num_musician = await daiToken.methods.num_musicians().call()
       setNumMusician(num_musician)
-      // this.setState({ daiToken })
-      // let daiTokenBalance = await daiToken.methods.balanceOf(this.state.account).call()
-      // this.setState({ daiTokenBalance: daiTokenBalance.toString() })
+
     } else {
       window.alert('DaiToken contract not deployed to detected network.')
     }
@@ -69,7 +72,9 @@ const [num_musician,setNumMusician] = useState()
   const handleInputChange = (e) => {
 
     const { name, value } = e.target;
-    
+    if(name=="ipfs"){
+      setIpfsHash("https://ipfs.infura.io/ipfs/"+value);
+    }
     setFormValues({
       ...formValues,
       [name]: value,
@@ -77,26 +82,35 @@ const [num_musician,setNumMusician] = useState()
   };
   const handleSubmit = (event) => {
     
-   console.log(formValues.pubaddr,formValues.ipfs)
-   token.methods.musician(formValues.pubaddr,formValues.ipfs).call({from:Account}).then((result) => {
-      
-        console.log(result);
+   
+   token.methods.recepients_length(formValues.pubaddr,formValues.ipfs).call({from:Account}).then((result) => {
+        const length = parseInt(result)
         const web3 = window.web3
-        console.log(result[3],result[4])
-        web3.eth.sendTransaction({to:result[3], from:Account, value:web3.utils.toWei(result[4], "ether")})
-        // console.log(result.dna);
+        // console.log(length);
+        for(let i=0;i<length;i++){
+          token.methods.recepients(formValues.pubaddr,formValues.ipfs,i).call({from:Account}).then((result) => {
+            const address = result
+            token.methods.payments(formValues.pubaddr,formValues.ipfs,i).call({from:Account}).then((result1) => {
+              const payment = result1
+              web3.eth.sendTransaction({to:address, from:Account, value:web3.utils.toWei(payment, "ether"),nonce:i+1}).then((result)=>{
+                if(i==length-1)
+                  setPaymentDone(true);
+              })
+              
+
+            });
+          });
+        } 
       
-    }); 
-   token.methods.all_ipfs_hash(0).call({from:Account}).then((result) => {
-      
-        console.log(result);
-        // console.log(result.dna);
-      
-    }); 
+    });
 
   };
   return (
-    
+    <div>
+    {paymentDone && <ThemeProvider theme={muiTheme}>
+  <AudioPlayer src={ipfsHash} />
+</ThemeProvider>  }
+    { !paymentDone &&
       <Grid container alignItems="center" justify="center" direction="column" spacing={2}>
         <Grid item xs={1}>
           <TextField
@@ -125,7 +139,8 @@ const [num_musician,setNumMusician] = useState()
           Submit
         </Button>
       </Grid>
-    
+    }
+    </div>
   );
 };
 export default User;

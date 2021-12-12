@@ -14,7 +14,9 @@ const defaultValues = {
   artist:"",
   wallet:"",
   payment:"",
-  ipfsHash:""
+  ipfsHash:"",
+  wallet1:"",
+  payment1:""
 };
 
 
@@ -47,10 +49,9 @@ const User = (props) => {
     const networkId = await web3.eth.net.getId()
 
     const daiTokenData = Musicians.networks[networkId]
-    console.log(daiTokenData)
+
     if(daiTokenData) {
       const daiToken = new web3.eth.Contract(Musicians.abi, daiTokenData.address)
-      console.log(daiToken)
       setToken(daiToken)
       // this.setState({ daiToken })
       // let daiTokenBalance = await daiToken.methods.balanceOf(this.state.account).call()
@@ -59,40 +60,7 @@ const User = (props) => {
       window.alert('DaiToken contract not deployed to detected network.')
     }
 
-    // Load DaiToken
-    // const daiTokenData = DaiToken.networks[networkId]
-    // if(daiTokenData) {
-    //   const daiToken = new web3.eth.Contract(DaiToken.abi, daiTokenData.address)
-    //   this.setState({ daiToken })
-    //   let daiTokenBalance = await daiToken.methods.balanceOf(this.state.account).call()
-    //   this.setState({ daiTokenBalance: daiTokenBalance.toString() })
-    // } else {
-    //   window.alert('DaiToken contract not deployed to detected network.')
-    // }
-
-    // // Load DappToken
-    // const dappTokenData = DappToken.networks[networkId]
-    // if(dappTokenData) {
-    //   const dappToken = new web3.eth.Contract(DappToken.abi, dappTokenData.address)
-    //   this.setState({ dappToken })
-    //   let dappTokenBalance = await dappToken.methods.balanceOf(this.state.account).call()
-    //   this.setState({ dappTokenBalance: dappTokenBalance.toString() })
-    // } else {
-    //   window.alert('DappToken contract not deployed to detected network.')
-    // }
-
-    // // Load TokenFarm
-    // const tokenFarmData = TokenFarm.networks[networkId]
-    // if(tokenFarmData) {
-    //   const tokenFarm = new web3.eth.Contract(TokenFarm.abi, tokenFarmData.address)
-    //   this.setState({ tokenFarm })
-    //   let stakingBalance = await tokenFarm.methods.stakingBalance(this.state.account).call()
-    //   this.setState({ stakingBalance: stakingBalance.toString() })
-    // } else {
-    //   window.alert('TokenFarm contract not deployed to detected network.')
-    // }
-
-    // this.setState({ loading: false })
+    
   }
 
   async function loadWeb3() {
@@ -110,7 +78,6 @@ const User = (props) => {
   const [albumpub,setAlbumPub] = useState(false)
   const [formValues, setFormValues] = useState(defaultValues);
   const handleInputChange = (e) => {
-    console.log(formValues)
     const { name, value } = e.target;
     
     setFormValues({
@@ -119,12 +86,10 @@ const User = (props) => {
     });
   };
   const handleSubmit = async(event) => {
-    console.log(formValues);
-    // event.preventDefault();
-    console.log(formValues);
-    var list1 = [formValues.wallet]
-    var list2 = [formValues.payment]
-    await token.methods.addAlbum(props.value,formValues.ipfsHash,formValues.title,formValues.album,formValues.publishingyear,formValues.wallet, formValues.payment).send({from:Account})
+    
+    var list1 = [formValues.wallet,formValues.wallet1]
+    var list2 = [formValues.payment,formValues.payment1]
+    await token.methods.addAlbum(props.value,formValues.ipfsHash,formValues.title,formValues.album,formValues.publishingyear,list1,list2).send({from:Account})
     setAlbumPub(true)
   };
   const onChange = async(e)=> {
@@ -211,6 +176,28 @@ const User = (props) => {
             label="Payment"
             type="text"
             value={formValues.payment}
+            onChange={handleInputChange}
+          />
+        </Grid>
+        <Grid item xs={1}>
+          <TextField
+            required={true}
+            id="wallet-address1"
+            name="wallet1"
+            label="Wallet Address"
+            type="text"
+            value={formValues.wallet1}
+            onChange={handleInputChange}
+          />
+        </Grid>
+        <Grid item xs={1}>
+          <TextField
+            required={true}
+            id="payment1"
+            name="payment1"
+            label="Payment"
+            type="text"
+            value={formValues.payment1}
             onChange={handleInputChange}
           />
         </Grid>
