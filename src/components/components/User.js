@@ -107,6 +107,9 @@ const [num_musician,setNumMusician] = useState()
   };
   return (
     <div>
+      <Grid>
+        <h1 align="center">Enter the Musician's Public Address Key and IPFS Hash Key To Stream the music</h1>
+      </Grid>
     {paymentDone && <ThemeProvider theme={muiTheme}>
   <AudioPlayer src={ipfsHash} />
 </ThemeProvider>  }
