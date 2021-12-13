@@ -28,7 +28,7 @@ const client = create('https://ipfs.infura.io:5001/api/v0')
 const User = (props) => {
 
 
-
+  const[readytosubmit, setReadyToSubmit] = useState(false)
   const[token,setToken] = useState()
 
   useEffect(() => {
@@ -102,6 +102,7 @@ const User = (props) => {
           ...formValues,
           "ipfsHash": x,
         });
+        setReadyToSubmit(true)
         alert("IPFS HASH:"+x);
         });
         // console.log(formValues,added.path,fileUrl)
@@ -209,7 +210,7 @@ const User = (props) => {
           />
           
         </Grid>
-        <Button variant="contained" color="primary" type="submit" onClick ={handleSubmit} >
+        <Button disabled={!readytosubmit} variant="contained" color="primary" type="submit" onClick ={handleSubmit} >
           Submit
         </Button>
       </Grid>
@@ -218,7 +219,7 @@ const User = (props) => {
    
 
     
-      {!albumpub && <Box component="div" sx={{ display: 'inline' }}>kaam hogya</Box> }
+      
      </div>
   );
 };
