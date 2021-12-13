@@ -12,6 +12,7 @@ import Container from '@mui/material/Container';
 import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import User from './User';
+import MusicianInfo from './MusicianInfo';
 // import Musician from './Musician';
 import MusicianLogin from './MusicianLogin';
 function Copyright() {
@@ -89,7 +90,17 @@ export default function Album() {
                   content='A user is a person who purchases and listens to the soundtracks released by music artists using this decentralized app.' />
                  </div>
               </Grid>
-           
+
+              <Grid item align="center">
+              <div onClick={ () => {setOption(3)}} >
+                <CardItem
+                link=""
+                altText="Musician Info"
+                imgLink="https://pubs.asha.org/cms/asset/0c2b8671-b9b3-4bd9-8c6e-3a73ff7d694f/aja-18-0125donofrio_featimage.jpg"
+                title='Music Info'
+                content='Get the Information details about the Musician you want to search for...' />
+              </div>
+            </Grid>
           </Grid>
         </Container>
       </main>
@@ -100,6 +111,9 @@ export default function Album() {
     option===1 && <MusicianLogin/>}
     {
     option===2 && <User/>}
+    {
+      option===3 && <MusicianInfo/>
+    }
     </ThemeProvider>
     {/* Footer */}
       <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
