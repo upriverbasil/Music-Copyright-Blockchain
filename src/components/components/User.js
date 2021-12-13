@@ -69,6 +69,7 @@ const [num_musician,setNumMusician] = useState()
 
 
   const [formValues, setFormValues] = useState(defaultValues);
+  // const [musicians_data,setMusicians_data] = useState()
   const handleInputChange = (e) => {
 
     const { name, value } = e.target;
@@ -81,28 +82,43 @@ const [num_musician,setNumMusician] = useState()
     });
   };
   const handleSubmit = (event) => {
-    
-   
-   token.methods.recepients_length(formValues.pubaddr,formValues.ipfs).call({from:Account}).then((result) => {
-        const length = parseInt(result)
-        const web3 = window.web3
-        // console.log(length);
-        for(let i=0;i<length;i++){
-          token.methods.recepients(formValues.pubaddr,formValues.ipfs,i).call({from:Account}).then((result) => {
-            const address = result
-            token.methods.payments(formValues.pubaddr,formValues.ipfs,i).call({from:Account}).then((result1) => {
-              const payment = result1
-              web3.eth.sendTransaction({to:address, from:Account, value:web3.utils.toWei(payment, "ether"),nonce:i+1}).then((result)=>{
-                if(i==length-1)
-                  setPaymentDone(true);
-              })
-              
 
-            });
-          });
-        } 
-      
-    });
+    // token.methods.musicians_allipfs_length(formValues.pubaddr).call({from:Account}).then((result) => {
+    //   let length = parseInt(result);
+
+    // });
+
+    // console.log(token)
+    token.methods.album_exists(formValues.pubaddr,formValues.ipfs).call({from:Account}).then((result)=>{
+      if(result==true){
+        token.methods.recepients_length(formValues.pubaddr,formValues.ipfs).call({from:Account}).then((result) => {
+            const length = parseInt(result)
+            const web3 = window.web3
+            // console.log(length);
+            for(let i=0;i<length;i++){
+              token.methods.recepients(formValues.pubaddr,formValues.ipfs,i).call({from:Account}).then((result) => {
+                const address = result
+                token.methods.payments(formValues.pubaddr,formValues.ipfs,i).call({from:Account}).then((result1) => {
+                  const payment = result1
+                  web3.eth.sendTransaction({to:address, from:Account, value:web3.utils.toWei(payment, "ether"),nonce:i+1}).then((result)=>{
+                    if(i==length-1)
+                      setPaymentDone(true);
+                  })
+                  
+
+                });
+              });
+            } 
+          
+        });
+      }
+      else{
+        alert("No such album with these details")
+      }
+    })
+
+   
+   
 
   };
   return (
