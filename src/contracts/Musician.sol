@@ -9,8 +9,10 @@ contract Musicians{
 	int public num_musicians;
 	mapping(string=>mapping(string=>Album)) public musician;
 	mapping(string=>bool) public musician_exists;
-
-
+	mapping(string=>mapping(string=>bool)) public album_exists;
+	string[] public all_publickeys;
+	mapping(string=>string[]) public musicians_allipfs;
+	mapping(string=>uint) public musicians_allipfs_length;
 	mapping(string=>mapping(string=>string[])) public recepients;
 	mapping(string=>mapping(string=>uint[])) public payments;
 	mapping(string=>mapping(string=>uint)) public recepients_length;
@@ -22,6 +24,7 @@ contract Musicians{
 	        //musician doesn't exists
 	       num_musicians++;  
 	       musician_exists[_publickey] = true;
+		   all_publickeys.push(_publickey);
 	    }
 
 	    musician[_publickey][_ipfs] = Album(_title,_album_name,_year);
@@ -36,9 +39,15 @@ contract Musicians{
 			payments[_publickey][_ipfs].push(_payments[i]);
 		}
 		payments_length[_publickey][_ipfs] = _payments.length;
-	   
+
+		if(!album_exists[_publickey][_ipfs]){
+			musicians_allipfs[_publickey].push(_ipfs);
+			musicians_allipfs_length[_publickey] += 1;  
+		}
+	   	album_exists[_publickey][_ipfs] = true;
 	    
 	}
+
 	    
 }    
     
