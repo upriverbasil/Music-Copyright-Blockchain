@@ -7,6 +7,7 @@ import Input from '@mui/material/Input';
 import Web3 from 'web3'
 import Musicians from '../../abis/Musicians.json'
 import Box from '@mui/material/Box';
+
 const defaultValues = {
   title:"",
   album:"",
@@ -18,10 +19,6 @@ const defaultValues = {
   wallet1:"",
   payment1:""
 };
-
-
-
-
 
 const client = create('https://ipfs.infura.io:5001/api/v0')
 
@@ -59,8 +56,6 @@ const User = (props) => {
     } else {
       window.alert('DaiToken contract not deployed to detected network.')
     }
-
-    
   }
 
   async function loadWeb3() {
@@ -112,9 +107,9 @@ const User = (props) => {
     }
   return (
     <div>
-    
-      <Grid container alignItems="center" justify="center" direction="column" spacing={2}>
-        <Grid item xs={1}>
+      <Grid container alignItems="center" justifyContent="center" spacing={3} style={{ padding: 20 }}>
+      <h1 > Music Details....</h1>
+        <Grid item xs="auto">
           <TextField
           	required={true}
             id="title-input"
@@ -125,7 +120,7 @@ const User = (props) => {
             onChange={handleInputChange}
           />
         </Grid>
-        <Grid item xs={1}>
+        <Grid item xs="auto">
           <TextField
           	required={true}
             id="album-input"
@@ -136,7 +131,7 @@ const User = (props) => {
             onChange={handleInputChange}
           />
         </Grid>
-         <Grid item xs={1}>
+         <Grid item xs="auto">
           <TextField
           	required={true}
             id="publishing-input"
@@ -147,7 +142,7 @@ const User = (props) => {
             onChange={handleInputChange}
           />
         </Grid>
-         <Grid item xs={1}>
+         <Grid item xs="auto">
           <TextField
           	required={true}
             id="artist-input"
@@ -158,57 +153,67 @@ const User = (props) => {
             onChange={handleInputChange}
           />
         </Grid>
-        <Grid item xs={1}>
-          <TextField
-          	required={true}
-            id="wallet-address"
-            name="wallet"
-            label="Wallet Address"
-            type="text"
-            value={formValues.wallet}
-            onChange={handleInputChange}
-          />
+      </Grid>
+      <Grid container alignItems="center" justifyContent="center" spacing={3} style={{ padding: 1 }}>
+        <h1 > Payments Details....</h1>
+      </Grid>
+        <Grid container alignItems="center" justifyContent="center" spacing={3} style={{ padding: 5 }}>
+          <Grid item xs="auto">
+            <TextField
+              required={true}
+              id="wallet-address"
+              name="wallet"
+              label="Wallet Address"
+              type="text"
+              value={formValues.wallet}
+              onChange={handleInputChange}
+            />
+          </Grid>
+          <Grid item xs="auto">
+            <TextField
+              required={true}
+              id="payment"
+              name="payment"
+              label="Payment"
+              type="text"
+              value={formValues.payment}
+              onChange={handleInputChange}
+            />
+          </Grid> 
         </Grid>
-        <Grid item xs={1}>
-          <TextField
-          	required={true}
-            id="payment"
-            name="payment"
-            label="Payment"
-            type="text"
-            value={formValues.payment}
-            onChange={handleInputChange}
-          />
+        <Grid container alignItems="center" justifyContent="center" spacing={3} style={{ padding: 8 }}>
+          <Grid item xs="auto">
+            <TextField
+              required={true}
+              id="wallet-address1"
+              name="wallet1"
+              label="Wallet Address"
+              type="text"
+              value={formValues.wallet1}
+              onChange={handleInputChange}
+            />
+          </Grid>
+          <Grid item xs="auto">
+            <TextField
+              required={true}
+              id="payment1"
+              name="payment1"
+              label="Payment"
+              type="text"
+              value={formValues.payment1}
+              onChange={handleInputChange}
+            />
         </Grid>
-        <Grid item xs={1}>
-          <TextField
-            required={true}
-            id="wallet-address1"
-            name="wallet1"
-            label="Wallet Address"
-            type="text"
-            value={formValues.wallet1}
-            onChange={handleInputChange}
-          />
-        </Grid>
-        <Grid item xs={1}>
-          <TextField
-            required={true}
-            id="payment1"
-            name="payment1"
-            label="Payment"
-            type="text"
-            value={formValues.payment1}
-            onChange={handleInputChange}
-          />
-        </Grid>
+      </Grid>
+      <Grid container alignItems="center" justifyContent="center" spacing={3} style={{ padding: 8 }}>
+        <h3 > Upload File....</h3>
+      </Grid>
+      <Grid container alignItems="center" justifyContent="center" spacing={3} style={{ padding: 5 }}>
         <Grid>
-
           <Input
             type="file"
             onChange={onChange}
-          />
-          
+          />         
         </Grid>
         <Button disabled={!readytosubmit} variant="contained" color="primary" type="submit" onClick ={handleSubmit} >
           Submit

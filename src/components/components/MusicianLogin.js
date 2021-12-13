@@ -71,18 +71,6 @@ const defaultValues = {
     ipfs_hash:""
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
 const User = () => {
     
     const [formValues, setFormValues] = useState(defaultValues);
@@ -115,6 +103,9 @@ const User = () => {
       };
   return (
     <form onSubmit={handleSubmit}>
+      <Grid>
+        <h1></h1>
+      </Grid>
       <Grid container alignItems="center" justify="center" direction="column" spacing={2}>
         <Grid item align = 'left' xs={1} >
           <TextField
@@ -127,13 +118,14 @@ const User = () => {
             onChange={handleInputChange}
           />
         </Grid>
-        <Button variant="contained" color="primary" type="submit" onClick={ () => {setOption(1)}} >
+        <Button variant="contained" color="primary" type="submit" onClick={ () => {
+          if(formValues.publicValue.length>10)setOption(1)}} >
           Submit
         </Button>
         <Grid>
             <div> 
-                <p align = 'center'> OR <br/> </p>
-                <p> Create New Public Key</p>
+                <h3 align = 'center'> OR <br/> </h3>
+                <h1> Create New Public Key</h1>
             </div>    
         </Grid>
         
