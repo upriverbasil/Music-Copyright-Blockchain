@@ -18,6 +18,7 @@ const defaultValues = {
   publishingyear: "",
   artist: "",
   ipfsHash: "",
+  coverImage: ""
 };
 
 const client = create("https://ipfs.infura.io:5001/api/v0");

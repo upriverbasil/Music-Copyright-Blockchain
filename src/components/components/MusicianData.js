@@ -1,64 +1,36 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { Table } from "react-bootstrap";
-import Web3 from "web3";
-import Musicians from "../../abis/Musicians.json";
-import { Button, Typography } from "@mui/material";
+import React from "react";
+import { Typography } from "@mui/material";
+import { Card, CardActionArea, CardMedia, CardContent } from "@mui/material";
+import { grid } from "@mui/system";
+import MusicianImage from "../../images/musician_image.jpg"
 
 function User(props) {
+  let image = MusicianImage;
 
   return (
     <div>
-      <Typography
-            sx={{ mt: 8 }}
-            variant="h3"
-            component="h1"
-            align="center"
-            color="text.primary"
-            gutterBottom
-          >
-            Musician public key for identification:
+      <Card sx={{ maxWidth: 300 }}>
+        <CardMedia
+          component="img"
+          height="225"
+          image={image}
+          alt="green iguana"
+        />
+        <CardContent>
+          <Typography sx={{ mb: 0 }} align="center" gutterBottom variant="h5">
+            {props.title}
           </Typography>
-          <Typography
-            sx={{ mt: 5 }}
-            variant="h4"
-            component="h1"
-            align="center"
-            color="text.primary"
-            gutterBottom
-          >
-            Title: {props.title}
+          <Typography align="center" variant="body2" color="text.secondary">
+            Artist's Public Key: {props.pubkey}
           </Typography>
-          <Typography
-            sx={{ mt: 2 }}
-            variant="h4"
-            component="h1"
-            align="center"
-            color="text.primary"
-            gutterBottom
-          >
-            Album: {props.album}
+          <Typography align="center" variant="body2" color="text.secondary">
+            {props.album}
           </Typography>
-          <Typography
-            sx={{ mt: 2 }}
-            variant="h4"
-            component="h1"
-            align="center"
-            color="text.primary"
-            gutterBottom
-          >
-            Publishing Year: {props.publishingyear}
+          <Typography align="center" variant="body2" color="text.secondary">
+            {props.publishingyear}
           </Typography>
-          <Typography
-            sx={{ mt: 2 }}
-            variant="h4"
-            component="h1"
-            align="center"
-            color="text.primary"
-            gutterBottom
-          >
-            Artist: {props.artist}
-          </Typography>
+        </CardContent>
+      </Card>
     </div>
   );
 }

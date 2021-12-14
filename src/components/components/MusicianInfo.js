@@ -3,14 +3,16 @@ import axios from "axios";
 import { Table } from "react-bootstrap";
 import Web3 from "web3";
 import Musicians from "../../abis/Musicians.json";
-import { Button, Typography } from "@mui/material";
-import MusicianData from "./MusicianData.js"
+import MusicianData from "./MusicianData.js";
+import Grid from "@mui/material/Grid";
+import { Typography } from "@mui/material";
 
 function User() {
   const [data, setData] = useState([]);
   const [token, setToken] = useState(false);
   const [Account, SetAccount] = useState();
   const [dataReady, setDataReady] = useState(false);
+
   useEffect(() => {
     (async () => {
       await loadWeb3();
@@ -19,10 +21,10 @@ function User() {
   }, []);
 
   useEffect(() => {
-    if(token !== false){
-        func()
+    if (token !== false) {
+      func();
     }
-  },[token])
+  }, [token]);
 
   async function loadBlockchainData() {
     const web3 = window.web3;
@@ -56,13 +58,22 @@ function User() {
   }
 
   const func = () => {
-    token.methods.num_musicians().call().then((result) => {
+    token.methods
+      .num_musicians()
+      .call()
+      .then((result) => {
         const n = parseInt(result);
         let result_store = [];
         for (let i = 0; i < n; i++) {
-          token.methods.all_publickeys(i).call().then((pubHash) => {
-              token.methods.musicians_allipfs_length(pubHash).call().then((length) => {
-                    // console.log(length)
+          token.methods
+            .all_publickeys(i)
+            .call()
+            .then((pubHash) => {
+              token.methods
+                .musicians_allipfs_length(pubHash)
+                .call()
+                .then((length) => {
+                  // console.log(length)
                   const size = parseInt(length);
                   for (let j = 0; j < size; j++) {
                     let temp = {
@@ -73,18 +84,24 @@ function User() {
                       ipfsHash: "",
                       publicHash: pubHash,
                     };
-                    token.methods.musicians_allipfs(pubHash, j).call().then((ipfs) => {
+                    token.methods
+                      .musicians_allipfs(pubHash, j)
+                      .call()
+                      .then((ipfs) => {
                         temp["ipfsHash"] = ipfs;
-                        token.methods.musician(pubHash, ipfs).call().then((details) => {
-                            //   console.log(details)
-                            temp["title"] = details['title'];
-                            temp["album"] = details['1'];
-                            temp["publishingyear"] = parseInt(details['2']);
-                            temp["artist"] = details['0'];
-                            setData(prevData => [...prevData,temp])
+                        token.methods
+                          .musician(pubHash, ipfs)
+                          .call()
+                          .then((details) => {
+                            console.log(details)
+                            temp["title"] = details["title"];
+                            temp["artist"] = details["0"];
+                            temp["album"] = details["1"];
+                            temp["publishingyear"] = parseInt(details["2"]);
+                            setData((prevData) => [...prevData, temp]);
                           });
                         result_store.push(temp);
-                    });
+                      });
                   }
                 });
             });
@@ -92,16 +109,43 @@ function User() {
         // setData(result_store);
 
         setDataReady(true);
-
-
       });
   };
 
   return (
     <>
-      { data.map((item) => {
-          return <MusicianData album={item.album} publishingyear={item.publishingyear} title={item.title} artist={item.artist}/>
-      }) }
+      <Typography
+        sx={{ mt: 8 }}
+        variant="h3"
+        component="h1"
+        align="center"
+        color="text.primary"
+        gutterBottom
+      >
+        Information about Musicians
+      </Typography>
+      <Grid
+        container
+        direction="row"
+        alignItems="center"
+        justifyContent="center"
+        spacing={3}
+        sx={{ my: 8 }}
+      >
+        {data.map((item, key) => {
+          return (
+            <Grid item xs="auto">
+              <MusicianData
+                title={item.title}
+                album={item.album}
+                pubkey={item.publicHash}
+                artist={item.artist}
+                publishingyear={item.publishingyear}
+              />
+            </Grid>
+          );
+        })}
+      </Grid>
     </>
   );
 }
