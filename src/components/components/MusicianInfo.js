@@ -4,29 +4,25 @@ import { Table } from "react-bootstrap";
 import Web3 from "web3";
 import Musicians from "../../abis/Musicians.json";
 import { Button, Typography } from "@mui/material";
-
-const defaultValues = {
-  title: "",
-  album: "",
-  publishingyear: "",
-  artist: "",
-  ipfsHash: "",
-  publicHash: "111",
-};
+import MusicianData from "./MusicianData.js"
 
 function User() {
-  const [users, setUsers] = useState([]);
-  const [singleUser, setSingleUser] = useState([defaultValues]);
-  const [token, setToken] = useState();
+  const [data, setData] = useState([]);
+  const [token, setToken] = useState(false);
   const [Account, SetAccount] = useState();
   const [dataReady, setDataReady] = useState(false);
-
   useEffect(() => {
     (async () => {
       await loadWeb3();
       await loadBlockchainData();
     })();
   }, []);
+
+  useEffect(() => {
+    if(token !== false){
+        func()
+    }
+  },[token])
 
   async function loadBlockchainData() {
     const web3 = window.web3;
@@ -41,7 +37,6 @@ function User() {
     if (daiTokenData) {
       const Token = new web3.eth.Contract(Musicians.abi, daiTokenData.address);
       setToken(Token);
-      //console.log(Token);
     } else {
       window.alert("DaiToken contract not deployed to detected network.");
     }
@@ -60,29 +55,14 @@ function User() {
     }
   }
 
-  const onddlChange = (e) => {
-    axios
-      .get()
-      .then((response) => setSingleUser(response.data))
-      .then((error) => console.log(error));
-  };
-
   const func = () => {
-    token.methods
-      .num_musicians()
-      .call()
-      .then((result) => {
+    token.methods.num_musicians().call().then((result) => {
         const n = parseInt(result);
         let result_store = [];
         for (let i = 0; i < n; i++) {
-          token.methods
-            .all_publickeys(i)
-            .call()
-            .then((pubHash) => {
-              token.methods
-                .musicians_allipfs_length(pubHash)
-                .call()
-                .then((length) => {
+          token.methods.all_publickeys(i).call().then((pubHash) => {
+              token.methods.musicians_allipfs_length(pubHash).call().then((length) => {
+                    // console.log(length)
                   const size = parseInt(length);
                   for (let j = 0; j < size; j++) {
                     let temp = {
@@ -93,40 +73,35 @@ function User() {
                       ipfsHash: "",
                       publicHash: pubHash,
                     };
-                    token.methods
-                      .musicians_allipfs(pubHash, j)
-                      .call()
-                      .then((ipfs) => {
+                    token.methods.musicians_allipfs(pubHash, j).call().then((ipfs) => {
                         temp["ipfsHash"] = ipfs;
-                        token.methods
-                          .musician(pubHash, ipfs)
-                          .call()
-                          .then((details) => {
-                            temp["title"] = details[0];
-                            temp["album"] = details[1];
-                            temp["publishingyear"] = parseInt(details[2]);
+                        token.methods.musician(pubHash, ipfs).call().then((details) => {
+                            //   console.log(details)
+                            temp["title"] = details['title'];
+                            temp["album"] = details['1'];
+                            temp["publishingyear"] = parseInt(details['2']);
+                            temp["artist"] = details['0'];
+                            setData(prevData => [...prevData,temp])
                           });
                         result_store.push(temp);
-                      });
+                    });
                   }
                 });
             });
         }
-        setUsers(result_store);
+        // setData(result_store);
+
         setDataReady(true);
+
+
       });
   };
 
   return (
     <>
-      <Button onClick={func}>Click</Button>
-      {dataReady && users.map((user, key) => {
-        return (
-          <>
-            <li>{user}</li>
-          </>
-        );
-      })}
+      { data.map((item) => {
+          return <MusicianData album={item.album} publishingyear={item.publishingyear} title={item.title} artist={item.artist}/>
+      }) }
     </>
   );
 }
